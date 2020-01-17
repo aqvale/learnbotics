@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(learnbotics)
+
+## Add support for C++11, supported in ROS Kinetic and newer
+add_definitions(-std=c++11)
+
+# Load catkin and all dependencies required for this package
+find_package(catkin REQUIRED COMPONENTS 
+  roscpp 
+  gazebo_ros 
+  gazebo_plugins
+)
+
+# Depend on system install of Gazebo
+find_package(gazebo REQUIRED)
+
+include_directories(include
+  ${Boost_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${OGRE_INCLUDE_DIRS}
+  ${OGRE-Terrain_INCLUDE_DIRS}
+  ${OGRE-Paging_INCLUDE_DIRS}
+)
+
+
+link_directories(${GAZEBO_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
+
+# For robot_plugin plugin
+add_library(velodyne_plugin src/velodyne_plugin.cpp)
+target_link_libraries(velodyne_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+# add_library(robot_plugin src/learnbotics.cpp)
+# target_link_libraries(robot_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+catkin_package(
+  DEPENDS 
+    roscpp 
+    gazebo_ros 
+    gazebo_plugins
+)
+
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES 
+  velodyne_plugin
+
+  CATKIN_DEPENDS
+  roscpp
+)

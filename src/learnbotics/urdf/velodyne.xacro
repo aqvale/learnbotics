@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<robot name="vlp-16" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin name="velodyne_control" filename="/home/bir/Documents/workspaces_ros/learnboticsFull_ws/devel/lib/libvelodyne_plugin.so">
+    </plugin>
+  </gazebo>
+
+  <!-- include the xacro files-->
+  <gazebo reference="Lidar">
+    <sensor type="ray" name="sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>30</update_rate>            
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>6.28319</max_angle>
+          </horizontal>
+          <!-- <vertical>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle> -0.261799
+            <max_angle>0</max_angle> 0.261799
+          </vertical> -->
+        </scan>
+        <range>
+          <min>0.0717</min>
+          <max>10</max> <!-- 100 -->
+          <resolution>0.02</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.02</stddev>
+        </noise>
+      </ray>
+      <!-- <plugin name="velodyne_control" filename="/home/bir/Documents/workspaces_ros/learnboticsFull_ws/devel/lib/libvelodyne_plugin.so">
+      <velocity>50</velocity>
+      </plugin> -->
+    </sensor>
+  </gazebo>
+  
+  <link name="base_lidar">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.000909131" iyy="0.000909131" izz="0.001107105" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <!-- <visual>
+      <geometry>
+        <cylinder length=".0717" radius=".05165"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length=".0717" radius=".05165"/>
+      </geometry>
+    </collision> -->
+  </link>
+    
+  <link name="Lidar">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://learnbotics/meshes/vlp16b.stl" scale="0.5 0.5 0.5"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+          <mesh filename="package://learnbotics/meshes/vlp16b.stl" scale="0.5 0.5 0.5"/>
+      </geometry>
+      <!-- <origin rpy="0  0  0" xyz="0       0       0.03585"/>
+      <geometry>
+        <cylinder length=".0717" radius=".05165"/>
+      </geometry> -->
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.000909131" iyy="0.000909131" izz="0.001107105" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  <joint name="Base_to_Lidar" type="revolute">
+    <parent link="base_lidar"/>
+    <child link="Lidar"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="-1" lower="-10000000000000000" upper="10000000000000000" velocity="10"/>
+  </joint>
+</robot> 
